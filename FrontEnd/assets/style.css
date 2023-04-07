@@ -90,6 +90,7 @@ video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	text-decoration: none;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -109,7 +110,10 @@ section {
 
 body {
 	line-height: 1;
+	/* ajouté */
+	background-color: #FFFEF8;
 }
+
 
 ol,
 ul {
@@ -152,7 +156,7 @@ section {
 	margin: 50px 0
 }
 
-h1 {
+h1 a{
 	display: flex;
 	flex-direction: column;
 	font-family: 'Syne';
@@ -161,7 +165,7 @@ h1 {
 	color: #B1663C
 }
 
-h1>span {
+h1 a >span {
 	font-family: 'Work Sans';
 	font-size: 10px;
 	letter-spacing: 0.1em;
@@ -187,7 +191,11 @@ nav li {
 	font-size: 1.2em;
 }
 
-li:hover {
+nav a{
+	color: black;
+}
+
+li a:hover {
 	color: #B1663C;
 }
 

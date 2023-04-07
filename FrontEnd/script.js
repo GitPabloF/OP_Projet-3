@@ -2,8 +2,9 @@ async function getData() {
         // 1.1 récupérer les travaux du back-end 
     try {
         // 1.1.1 récup les data de l'API
-        const response = await fetch('http://localhost:5678/API/works');
-        const donnees = await response.json();
+        const donnees =  fetch('http://localhost:5678/API/works')
+            .then(donnees => donnees.json());
+        
 
         // 1.1.2 Via une boucle for, supprimer et afficher les nouveaux contenus 
 
