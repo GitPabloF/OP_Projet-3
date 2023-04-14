@@ -19,7 +19,6 @@ async function logUser() {
         let chargeUtile = JSON.stringify(connexion);
 
         try {
-
             // 2.2.5 appel de fetch en POST 
             const reponse = await fetch('http://localhost:5678/api/users/login', {
                 method: "post",
@@ -44,7 +43,6 @@ async function logUser() {
                 
 
             } else{
-                console.log("une erreur est survenu"); 
                 // message erreur 
                 const err_serveurSelector = document.querySelector("#Erreur_Serveur");
                 err_serveurSelector.style.display = "none";
@@ -58,16 +56,16 @@ async function logUser() {
                 inputSelector2.style.border = "solid 0.5px #d65757";
 
                 utilisateurEstConnecte = false;
-
             } 
 
 
         } catch (error) {
+            console.log("une erreur est survenu"); 
             const logInSelector = document.querySelector("#LogIn_invalide");
             logInSelector.style.display = "none";
 
-            const err_serveurSelector = document.querySelector("#Erreur_Serveur");
-            err_serveurSelector.style.display = "block";
+            // const err_serveurSelector = document.querySelector("#Erreur_Serveur");
+            // err_serveurSelector.style.display = "block";
 
             console.log("serveur")
 

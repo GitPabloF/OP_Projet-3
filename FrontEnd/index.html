@@ -10,19 +10,21 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
 		rel="stylesheet">
 	<meta name="description" content="">
-	<script src="https://kit.fontawesome.com/2ac50d8ba8.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
 	<!-- ajout bannière mode édition -->
 	<div id="edition">
-		<button> <i class="fas fa-pen-to-square"></i> Mode édition</button>
+		<button> <i class="fas fa-pen-to-square"></i>Mode édition</button>
 		<button>publier les changements</button>
 	</div>
 	<!-- fin ajout bannière mode édition -->
 	<header>
-		<h1><a href="index.html">Sophie Bluel <span>Architecte d'inteérieur</span></a></h1>
+		<h1><a href="index.html">Sophie Bluel <span>Architecte d'intérieur</span></a></h1>
 		<nav>
 			<ul>
 				<li><a href="#portfolio">projets</a></li>
@@ -36,8 +38,13 @@
 		<section id="introduction">
 			<figure>
 				<img src="./assets/images/sophie-bluel.png" alt="">
+				<div id="div-img-modifer">
+					<a href="#" class="btn_modifier"><i class="fas fa-pen-to-square"></i>modifier</a>
+				</div>
 			</figure>
 			<article>
+				<a href="#" class="btn_modifier" id="intro-btn-modifier"><i
+						class="fas fa-pen-to-square"></i>modifier</a>
 				<h2>Designer d'espace</h2>
 				<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison
 					finale du chantier.</p>
@@ -45,24 +52,50 @@
 					couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du
 					chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 				<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG,
-					décorateur(trice)</p>
+					décorateur(trice).</p>
 			</article>
 		</section>
 
 		<section id="portfolio">
 			<!-- Ajout du btn de modification -->
-			<h2>Mes Projets<button id="portfolio-modifier"><i class="fas fa-pen-to-square"></i>modifier</button></h2>
+			<h2>Mes Projets <a href="#modale-conteneur" class="btn_modifier" id="portfolio-modifier-a"><i
+						class="fas fa-pen-to-square"></i>modifier</a></h2>
 			<!-- Ajout de la modale -->
-			<div id="modal-conteneur" aria-hidden="true" role="dialog" aria-labelledby="modal-titre">
-				<div id="modal">
-					<button id="modal-close">close</button>
-					<h3 id="modal-titre">Galerie photo</h3>
-					<div id="modal-card-conteneur">
-
+			<div id="modale-conteneur" aria-hidden="true" role="dialog" aria-labelledby="modale-titre">
+				<div id="modale">
+					<!-- modale index -->
+					<div class="modale-page" id="modale_index">
+						<button class="" id="modale-close" aria-label="fermer la modale"><i class="fa-solid fa-xmark"></i>
+						</button>
+						<h3 id="modale-titre">Galerie photo</h3>
+						<div id="modale-card-conteneur">
+							<div class="card">
+								<div id="card1" class="card-img">
+									<img src=''>
+									<button id="card-deplacer" aria-label="supprimer-projet"><i
+											class="fa-solid fa-arrows-up-down-left-right"></i>
+									</button>
+									<button aria-label="supprimer-projet"><i class="fa-solid fa-trash-can"></i></i>
+									</button>
+								</div>
+								<h4 class="card-editer">éditer</h4>
+							</div>
+						</div>
+						<div id="modale-ligne"></div>
+						<button id="modale-ajout_photo">Ajouter une photo</button>
+						<button id="modale-supprimer-galerie">Supprimer la galerie</button>
 					</div>
-					<div id="modal-ligne"></div>
-					<button id="modal-ajout_photo">Ajouter une photo</button>
-					<button id="modal-supprimer-galerie">Supprimer la galerie</button>
+					<!-- modale page ajout photo -->
+					<!-- <div class="modale-page" id="modale_ajout_projet">
+						<button class="" id="modale-close" aria-label="fermer la modale"><i class="fa-solid fa-xmark"></i>
+						</button>
+						<h3 id="modale-titre">Galerie photo</h3>
+						<div id="modale-form">
+							<input type="file">
+							<input type="text">
+							<input type="">
+						</div> -->
+					</div>
 				</div>
 			</div>
 			<!-- Ajout des btn de filtrage -->

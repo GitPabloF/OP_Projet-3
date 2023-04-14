@@ -15,6 +15,23 @@ function getData() {
                         document.querySelector('#portfolio .gallery').innerHTML +=
                             `<figure> <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> </figure>`;
                     }
+
+                    // -- METTRE PROJETS SUR MODALE
+                    // mettre l'image du premier élément du JSON pour la première card (icon déplacer)
+                    document.querySelector('#card1 img').src = `${donnees[0].imageUrl}`;
+
+                    // mettre les autres images des autres projets dans la modale 
+                    for (let i = 1; i < donnees.length; i++) {
+                        document.querySelector('#modale-card-conteneur').innerHTML +=
+                            `<div class="card">
+                            <div class="card-img" id="card${donnees[i].id}">
+                                <img src='${donnees[i].imageUrl}'>												
+                                <button aria-label="supprimer-projet"><i class="fa-solid fa-trash-can"></i></i>
+                                </button>			
+                            </div>
+                            <h4 class="card-editer">éditer</h4>
+                        </div>`
+                    }
                 }
                 genererElements(donnees);
 
@@ -54,6 +71,7 @@ getData();
 
 // début post avec token
 
+// ???
 
 // fin post avec token 
 
@@ -62,6 +80,15 @@ if (localStorage.getItem("token") != null) {
     // afficher /masquer les éléments 
     const editionSelecteur = document.querySelector("#edition");
     editionSelecteur.style.display = "flex";
+
+    // const modiferBtnSelecteur = document.getElementsByClassName("btn_modifier");
+    // // // const modiferBtnSelecteur = document.querySelector("#portfolio-modifier-a");
+    // modiferBtnSelecteur.style.display = "inline";
+
+    const modiferBtnSelecteur = document.getElementsByClassName("btn_modifier");
+    for (let i = 0; i < modiferBtnSelecteur.length; i++) {
+        modiferBtnSelecteur[i].style.display = "inline-block";
+    }
 
     const headerSelecteur = document.querySelector("header");
     headerSelecteur.style.margin = "87px 0";
@@ -92,9 +119,63 @@ if (localStorage.getItem("token") != null) {
 
 }
 
-// modale 
+// -- création d'une modale --
 
+// fonction pour ouvrir la modale 
+const ouvreModale = function (e) {
+    // enlève le compotement par défaut du HTML  
+    e.preventDefault();
 
+    // sélectionne le conteneur et l'affiche (en flex)
+    const modaleElement = document.querySelector('#modale-conteneur');
+    modaleElement.style.display = 'flex';
+
+    // ajuste les attributs pour l'accessibilité 
+    modaleElement.removeAttribute('aria-hidden');
+    modaleElement.setAttribute('aria-modale', 'true');
+
+    // ajout de l'événement pour fermer la modale en cliquant sur la page 
+    modaleElement.addEventListener('click', fermeModale);
+
+    // ajout de l'événement pour fermer la modale en cliquant sur le btn pour fermer  
+    modaleElement.querySelector('#modale-close').addEventListener('click', fermeModale);
+
+    // ajout de l'événement pour que la modale ne se ferme pas quand on clique sur la modale en elle-même
+    modaleElement.querySelector('#modale').addEventListener('click', stopPropagation);
+}
+
+// fonction pour fermer la modale 
+const fermeModale = function (e) {
+    // enlève le compotement par défaut du HTML  
+    e.preventDefault();
+
+    // sélectionne le conteneur et le masque
+    const modaleElement = document.querySelector('#modale-conteneur');
+    modaleElement.style.display = 'none';
+
+    // ajuste les attributs pour l'accessibilité 
+    modaleElement.setAttribute('aria-hidden', 'true');
+    modaleElement.removeAttribute('aria-modale');
+
+    // retire l'événement pour fermer la modale en cliquant sur la page 
+    modaleElement.removeEventListener('click', fermeModale);
+
+    // retire l'événement pour fermer la modale en cliquant sur le btn pour fermer  
+    modaleElement.querySelector('#modale-closer').removeEventListener('click', fermeModal);
+
+    // retire l'événement pour que la modale ne se ferme pas quand on clique sur la modale en elle-même
+    modaleElement.querySelector('#modale').removeEventListener('click', stopPropagation);
+}
+
+// Création d'une fonction qui stop la propagation de l'événement
+const stopPropagation = function (e) {
+    e.stopPropagation();
+}
+
+// Sélection du btn pour ouvrir la modale + ajout d'un event click qui appelle la fonction ouvreModale
+document.querySelector('#portfolio-modifier-a').addEventListener('click', ouvreModale);
+
+// -- afficher les éléments dans la modale
 
 
 
