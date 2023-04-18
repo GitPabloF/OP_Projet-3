@@ -130,6 +130,9 @@ const ouvreModale = function (e) {
     const modaleElement = document.querySelector('#modale-conteneur');
     modaleElement.style.display = 'flex';
 
+    const modaleSelector = document.querySelector('#modale');
+    modaleSelector.style.height = "670px";
+
     // ajuste les attributs pour l'accessibilité 
     modaleElement.removeAttribute('aria-hidden');
     modaleElement.setAttribute('aria-modale', 'true');
@@ -138,10 +141,17 @@ const ouvreModale = function (e) {
     modaleElement.addEventListener('click', fermeModale);
 
     // ajout de l'événement pour fermer la modale en cliquant sur le btn pour fermer  
-    modaleElement.querySelector('#modale-close').addEventListener('click', fermeModale);
+    modaleElement.querySelector('#index-modale_close').addEventListener('click', fermeModale);
 
     // ajout de l'événement pour que la modale ne se ferme pas quand on clique sur la modale en elle-même
     modaleElement.querySelector('#modale').addEventListener('click', stopPropagation);
+
+    // masquer la page 'ajout photo' de la modale 
+    const modalePage2Selector = document.querySelector('#modale_ajout_projet');
+    modalePage2Selector.style.display = 'none';
+
+    const modalePage1Selector = document.querySelector('#modale_index');
+    modalePage1Selector.style.display = 'flex';
 }
 
 // fonction pour fermer la modale 
@@ -161,10 +171,35 @@ const fermeModale = function (e) {
     modaleElement.removeEventListener('click', fermeModale);
 
     // retire l'événement pour fermer la modale en cliquant sur le btn pour fermer  
-    modaleElement.querySelector('#modale-closer').removeEventListener('click', fermeModal);
+    modaleElement.querySelector('#modale-closer').removeEventListener('click', fermeModale);
 
     // retire l'événement pour que la modale ne se ferme pas quand on clique sur la modale en elle-même
     modaleElement.querySelector('#modale').removeEventListener('click', stopPropagation);
+}
+
+// -- afficher modale page 2
+
+const ouvreModalePage2 = function (e) {
+    // enlève le compotement par défaut du HTML  
+    e.preventDefault();
+
+    // Masque la page 1 de la modale
+    const modaleElement = document.querySelector('#modale_index');
+    modaleElement.style.display = 'none';
+
+    // affiche la page 2 de la modale
+    const modalePage2Selector = document.querySelector('#modale_ajout_projet');
+    modalePage2Selector.style.display = 'flex';
+
+    // définit la hauteur dédiée à la modale page 2 
+    const modaleSelector = document.querySelector('#modale');
+    modaleSelector.style.height = "610px";
+
+    // ajoute l'évenement pour fermer la modale 
+    const fermerModale = document.querySelector('#modale-page2-close').addEventListener('click', fermeModale);
+    
+    // ajoute l'événement pour retourner sur la page 1 de la modale 
+    const modaleRetourSelector = document.querySelector('#modale-retour').addEventListener('click', ouvreModale);
 }
 
 // Création d'une fonction qui stop la propagation de l'événement
@@ -175,7 +210,8 @@ const stopPropagation = function (e) {
 // Sélection du btn pour ouvrir la modale + ajout d'un event click qui appelle la fonction ouvreModale
 document.querySelector('#portfolio-modifier-a').addEventListener('click', ouvreModale);
 
-// -- afficher les éléments dans la modale
+// Sélectionne la page 2 de la modale + appelle la fonction pour affiche la page 2 de la modale 
+document.querySelector('#modale-ajout_photo').addEventListener('click', ouvreModalePage2);
 
 
 
