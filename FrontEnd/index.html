@@ -70,13 +70,13 @@
 						</button>
 						<h3 id="modale-titre">Galerie photo</h3>
 						<div id="modale-card-conteneur">
-							<div class="card">
-								<div id="card1" class="card-img">
+							<div class="card" id="card1">
+								<div id="card1-img" class="card-img">
 									<img src=''>
-									<button id="card-deplacer" aria-label="supprimer-projet"><i
+									<button id="card-deplacer" aria-label="déplacer-projet"><i
 											class="fa-solid fa-arrows-up-down-left-right"></i>
 									</button>
-									<button aria-label="supprimer-projet"><i class="fa-solid fa-trash-can"></i></i>
+									<button aria-label="supprimer-projet" class= "card-bouton_supprimer" id="card1-bouton_supprimer"><i class="fa-solid fa-trash-can"></i></i>
 									</button>
 								</div>
 								<h4 class="card-editer">éditer</h4>
@@ -97,12 +97,12 @@
 						<h3 id="modale-titre">Ajout photo</h3>
 						<form id="modale-form">
 							<div id="container-ajouter-fichier">
-								<input type="file" name ="ajouter-fichier" id="ajouter-fichier">
+								<input type="file" accept="image/*" size="4000000" name="ajouter-fichier" id="ajouter-fichier">
 								<label for="ajouter-fichier" id="label-ajouter-fichier">+ Ajouter photo</label>
 								<p>jpg,png : 4mo max</p>
 							</div>
 							<label for="label-ajouter-titre" id="label-ajouter-titre">Titre</label>
-							<input type="text" name ="ajouter-titre" id="ajouter-titre">
+							<input type="text" name="ajouter-titre" id="ajouter-titre">
 							<label for="select_categorie" id="label-select_categorie">Catégorie</label>
 							<select id="select_categorie" name=«select_categorie» id="select_categorie">
 								<option disabled selected></option>
@@ -145,6 +145,7 @@
 				<input type="submit" value="Envoyer">
 			</form>
 		</section>
+
 	</main>
 
 	<footer>

@@ -414,6 +414,8 @@ footer nav ul {
 
 #modale_index {
 	display: flex;
+	position: relative;
+	height: 100%;
 	/* flex/none */
 	flex-direction: column;
 	align-items: center;
@@ -437,7 +439,7 @@ footer nav ul {
 
 #modale-card-conteneur {
 	margin-top: 45px;
-	height: 390px;
+	/* height: 390px; */
 	width: 430px;
 	/* max-height: ; */
 	max-width: calc(100vw - 40px);
@@ -452,6 +454,8 @@ footer nav ul {
 	max-width: calc(100vw - 40px);
 	border-bottom: 1px solid #B3B3B3;
 	margin-top: 47px;
+	position: absolute;
+	bottom: 132px;
 }
 
 #modale-ajout_photo {
@@ -462,6 +466,8 @@ footer nav ul {
 	color: white;
 	border: none;
 	padding: 10px 49px;
+	position: absolute;
+	bottom: 58px;
 }
 
 #modale-supprimer-galerie {
@@ -469,6 +475,8 @@ footer nav ul {
 	background-color: transparent;
 	border: none;
 	color: #D65353;
+	position: absolute;
+	bottom: 18px;
 }
 
 /* MODAL CARD */
@@ -554,6 +562,9 @@ footer nav ul {
 	margin-top: 35px;
 	height: 170px;
 	width: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: auto 100%;
 }
 
 #container-ajouter-fichier label{
@@ -637,7 +648,10 @@ input[type="file"] {
 	background-origin: content-box;
 }
 
-
+#modale_ajout_projet .modale-ligne{
+	position: relative;
+	bottom: 0;
+}
 
 .modale-page input[type="submit"] {
 	padding: 10px 49px;

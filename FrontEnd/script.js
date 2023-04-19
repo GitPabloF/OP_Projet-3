@@ -13,25 +13,54 @@ function getData() {
                     // 1.1.4 boucle for qui créé les éléments HTML et incorpore les éléments de l'API
                     for (let i = 0; i < donnees.length; i++) {
                         document.querySelector('#portfolio .gallery').innerHTML +=
-                            `<figure> <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> </figure>`;
+                            `<figure id="card${donnees[i].id}"> <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> </figure>`;
                     }
 
                     // -- METTRE PROJETS SUR MODALE
                     // mettre l'image du premier élément du JSON pour la première card (icon déplacer)
-                    document.querySelector('#card1 img').src = `${donnees[0].imageUrl}`;
+                    document.querySelector('#card1-img img').src = `${donnees[0].imageUrl}`;
 
                     // mettre les autres images des autres projets dans la modale 
                     for (let i = 1; i < donnees.length; i++) {
                         document.querySelector('#modale-card-conteneur').innerHTML +=
-                            `<div class="card">
-                            <div class="card-img" id="card${donnees[i].id}">
+                            `<div class="card" id="${donnees[i].id}">
+                            <div class="card-img" id="${donnees[i].id}">
                                 <img src='${donnees[i].imageUrl}'>												
-                                <button aria-label="supprimer-projet"><i class="fa-solid fa-trash-can"></i></i>
+                                <button aria-label="supprimer-projet" class= "card-bouton_supprimer" id="card${donnees[i].id}-bouton_supprimer"><i class="fa-solid fa-trash-can"></i></i>
                                 </button>			
                             </div>
                             <h4 class="card-editer">éditer</h4>
                         </div>`
                     }
+
+                    // Supprimer dynamiquement projets 
+
+                    const deleteButtons = document.querySelectorAll('.card-bouton_supprimer');
+
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            const card = button.closest('.card');
+                            const cardId = card.id;
+                            card.remove();
+                            console.log(`La carte avec l'id ${cardId} a été supprimée.`);
+
+                            document.querySelector(`.gallery #card${cardId}`).remove();
+
+                            let token = localStorage.getItem("token");
+                            console.log(token);
+
+                            fetch(`http://localhost:5678/api/works/${cardId}`, {
+                                method: "delete",
+                                headers: { "content-type": "application/json",
+                                "Authorization": `Bearer ${token}`}
+                            })
+                            .then(res => console.log(res));
+                        });
+                    });
+                    // fin : supprimer dynamiquement projets 
+
+                    // Ajouter dynamiquement projets 
+
                 }
                 genererElements(donnees);
 
@@ -197,7 +226,7 @@ const ouvreModalePage2 = function (e) {
 
     // ajoute l'évenement pour fermer la modale 
     const fermerModale = document.querySelector('#modale-page2-close').addEventListener('click', fermeModale);
-    
+
     // ajoute l'événement pour retourner sur la page 1 de la modale 
     const modaleRetourSelector = document.querySelector('#modale-retour').addEventListener('click', ouvreModale);
 }
@@ -214,5 +243,64 @@ document.querySelector('#portfolio-modifier-a').addEventListener('click', ouvreM
 document.querySelector('#modale-ajout_photo').addEventListener('click', ouvreModalePage2);
 
 
+//  -- ajout d'une photo 
 
+// console.log(document.querySelector('#container-ajouter-fichier'));
+// if(document.querySelector('#ajouter-fichier').files != ""){
+//     document.querySelector("#container-ajouter-fichier").style.backgroundImage = "url(assets/images/abajour-tahina.png)"
+
+//     document.querySelector('#ajouter-fichier').style.display = "none";
+// }
+
+const inputTypeFileSelector = document.querySelector('#ajouter-fichier');
+var imageAjoutee = "";
+
+
+  // -- Ajouter un projet  
+
+function ajouterProjet(){
+    document.querySelector('#modale-form').addEventListener('submit', (event)=>{
+        event.preventDefault();
+        console.log("super submit");
+
+        const ajouterTitre = event.target.querySelector("#ajouter-titre").value;
+        const selectCategorie =  event.target.querySelector("#select_categorie").value;
+
+        if(ajouterTitre != "" && selectCategorie != ""){
+            console.log("titre et catégorie ok ")
+        }
+        else{
+            console.log("il manque quelque chose")
+        }
+    })
+
+};
+
+// Afficher l'image dans l'input type file
+inputTypeFileSelector.addEventListener('change', function(){
+    const reader = new FileReader();
+    reader.addEventListener("load", ()=> {
+        imageAjoutee = reader.result;
+        let containerAjoutImageSelector =
+        document.querySelector('#container-ajouter-fichier');
+
+        containerAjoutImageSelector.style.backgroundImage = `url(${imageAjoutee})`;
+
+        containerAjoutImageSelector.style.backgroundColor = '#E8F1F6';
+
+        inputTypeFileSelector.style.color = "transparent";
+
+        inputTypeFileSelector.style.backgroundColor = "transparent";
+        
+        inputTypeFileSelector.style.backgroundImage = 'url()';
+
+        document.querySelector('#container-ajouter-fichier label').style.display = "none";
+
+        document.querySelector('#container-ajouter-fichier p').style.display = "none";
+        
+        ajouterProjet();
+
+    })
+    reader.readAsDataURL(this.files[0]);
+})
 
