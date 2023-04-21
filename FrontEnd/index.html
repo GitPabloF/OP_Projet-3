@@ -97,7 +97,7 @@
 						<h3 id="modale-titre">Ajout photo</h3>
 						<form id="modale-form">
 							<div id="container-ajouter-fichier">
-								<input type="file" accept="image/*" size="4000000" name="ajouter-fichier" id="ajouter-fichier">
+								<input type="file" accept=".jpg, .png" max-size="4000000" name="ajouter-fichier" id="ajouter-fichier">
 								<label for="ajouter-fichier" id="label-ajouter-fichier">+ Ajouter photo</label>
 								<p>jpg,png : 4mo max</p>
 							</div>
@@ -110,6 +110,7 @@
 								<option value="appartements">Appartements</option>
 								<option value="hotels_restaurants">Hôtels & restaurants</option>
 							</select>
+							<p id="form_incomplet">Veuillez remplir tous les champs nécessaires.</p>
 							<div class="modale-ligne"></div>
 							<input type="submit" value="Valider">
 						</form>

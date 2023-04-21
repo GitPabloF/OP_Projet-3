@@ -1,23 +1,26 @@
 function getData() {
-    // 1.1 récupérer les travaux du back-end 
+    //  -- RÉCUPÉRER LES TRAVAUX DU BACK-END --
     try {
-        // 1.1.1 récup les data de l'API
+        // récup les data de l'API
         fetch('http://localhost:5678/API/works')
             .then(donnees => donnees.json())
 
-            // 1.1.2 afficher les projets 
+            // afficher les projets 
             .then(donnees => {
                 function genererElements(donnees) {
-                    // 1.1.3 retire les projes de la page au lancement de la fonction
+                    // retire les projets de la page au lancement de la fonction
                     document.querySelector('#portfolio .gallery').innerHTML = "";
-                    // 1.1.4 boucle for qui créé les éléments HTML et incorpore les éléments de l'API
+                    // boucle for qui créé les éléments HTML et incorpore les éléments de l'API
                     for (let i = 0; i < donnees.length; i++) {
                         document.querySelector('#portfolio .gallery').innerHTML +=
-                            `<figure id="card${donnees[i].id}"> <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> </figure>`;
+                            `<figure id="card${donnees[i].id}"> 
+                                <p  class="card-id">${donnees[i].id}</p>
+                                <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> 
+                            </figure>`;
                     }
 
-                    // -- METTRE PROJETS SUR MODALE
-                    // mettre l'image du premier élément du JSON pour la première card (icon déplacer)
+                    // -- METTRE PROJETS SUR MODALE --
+                    // mettre l'image du premier élément du JSON pour la première card (avec l'icon déplacer)
                     document.querySelector('#card1-img img').src = `${donnees[0].imageUrl}`;
 
                     // mettre les autres images des autres projets dans la modale 
@@ -33,7 +36,7 @@ function getData() {
                         </div>`
                     }
 
-                    // Supprimer dynamiquement projets 
+                    // --- SUPPRIMER DYNAMIQUEMENT PROJETS -- 
 
                     const deleteButtons = document.querySelectorAll('.card-bouton_supprimer');
 
@@ -51,37 +54,35 @@ function getData() {
 
                             fetch(`http://localhost:5678/api/works/${cardId}`, {
                                 method: "delete",
-                                headers: { "content-type": "application/json",
-                                "Authorization": `Bearer ${token}`}
+                                headers: {
+                                    "content-type": "application/json",
+                                    "Authorization": `Bearer ${token}`
+                                }
                             })
-                            .then(res => console.log(res));
+                                .then(res => console.log(res));
                         });
                     });
-                    // fin : supprimer dynamiquement projets 
-
-                    // Ajouter dynamiquement projets 
-
                 }
                 genererElements(donnees);
 
-                // 1.2 Réalisation des filtres   
-                // 1.2.1 Séléctionner les btn du HTML 
+                //  -- RÉALISATION DES FILTRES --
+                // Séléctionner les btn du HTML 
                 const btnTous = document.querySelector('#portfolio #tous');
                 const btnObjet = document.querySelector('#portfolio #objets');
                 const btnAppartements = document.querySelector('#portfolio #appartements');
                 const btnHotelsRestaurants = document.querySelector('#portfolio #hotels_restaurants');
 
-                // 1.2.2 Création de d'une fonction avec une fonction filter 
+                // Création de d'une fonction avec une fonction filter 
                 function filtrage(nomFiltre) {
                     const elementsFiltrees = donnees.filter((donnee) => {
                         return donnee.category.name == `${nomFiltre}`;
                     });
-                    // 2.2.3 Retirer tous les éléments du HTML + appeler la fonction avec les nouveaux élements filtres
+                    // Retirer tous les éléments du HTML + appeler la fonction avec les nouveaux élements filtres
                     document.querySelector('#portfolio .gallery').innerHTML = "";
                     genererElements(elementsFiltrees);
                 }
 
-                //1.2.4 ajouter l'écouteur avec la fonction de filtrage avce l'élément souhaité
+                // Ajouter l'écouteur avec la fonction de filtrage avce l'élément souhaité
 
                 btnTous.addEventListener("click", () => genererElements(donnees));
                 btnObjet.addEventListener("click", () => filtrage("Objets"));
@@ -96,43 +97,37 @@ function getData() {
 
 getData();
 
-// mode édition 
-
-// début post avec token
-
-// ???
-
-// fin post avec token 
-
+// -- AFFICHAGE MODE ÉDITION --
+// Condition si il y a un token dans le local storage
 if (localStorage.getItem("token") != null) {
-    console.log("token user ok")
-    // afficher /masquer les éléments 
+
+    // affiche la bannière du mode édition 
     const editionSelecteur = document.querySelector("#edition");
     editionSelecteur.style.display = "flex";
 
-    // const modiferBtnSelecteur = document.getElementsByClassName("btn_modifier");
-    // // // const modiferBtnSelecteur = document.querySelector("#portfolio-modifier-a");
-    // modiferBtnSelecteur.style.display = "inline";
-
+    // affiche les boutons modifier 
     const modiferBtnSelecteur = document.getElementsByClassName("btn_modifier");
     for (let i = 0; i < modiferBtnSelecteur.length; i++) {
         modiferBtnSelecteur[i].style.display = "inline-block";
     }
 
+    // ajuste la marge du header
     const headerSelecteur = document.querySelector("header");
     headerSelecteur.style.margin = "87px 0";
 
+    // change le texte de Log-in en Log-out
     const navLoginSelecteur = document.querySelector("#nav-login");
     navLoginSelecteur.textContent = "logout"
 
+    // masque les filtres 
     const filtresSelecteur = document.querySelector("#filtres");
     filtresSelecteur.style.display = "none";
 
+    // ajuste les marges pour le titre du portefolio
     const portfolioh2Selecteur = document.querySelector("#portfolio h2");
     portfolioh2Selecteur.style.margin = "3em";
 
-    // --- bouton logout ------
-
+    // -- BOUTON LOGOUT --
     // selectionner le bouton 
     const logoutSelecteur = document.querySelector("#nav-login");
 
@@ -143,14 +138,12 @@ if (localStorage.getItem("token") != null) {
         // au click -> clearlocalstorage + refraichir la page 
         window.localStorage.removeItem("token");
         document.location.reload();
-        // rafraichir la page 
     });
 
 }
 
-// -- création d'une modale --
-
-// fonction pour ouvrir la modale 
+// -- CRÉATION D'UNE MODALE --
+// -- fonction pour ouvrir la modale --
 const ouvreModale = function (e) {
     // enlève le compotement par défaut du HTML  
     e.preventDefault();
@@ -183,7 +176,7 @@ const ouvreModale = function (e) {
     modalePage1Selector.style.display = 'flex';
 }
 
-// fonction pour fermer la modale 
+//  -- fonction pour fermer la modale --
 const fermeModale = function (e) {
     // enlève le compotement par défaut du HTML  
     e.preventDefault();
@@ -206,7 +199,7 @@ const fermeModale = function (e) {
     modaleElement.querySelector('#modale').removeEventListener('click', stopPropagation);
 }
 
-// -- afficher modale page 2
+// -- afficher modale page 2 --
 
 const ouvreModalePage2 = function (e) {
     // enlève le compotement par défaut du HTML  
@@ -243,46 +236,76 @@ document.querySelector('#portfolio-modifier-a').addEventListener('click', ouvreM
 document.querySelector('#modale-ajout_photo').addEventListener('click', ouvreModalePage2);
 
 
-//  -- ajout d'une photo 
-
-// console.log(document.querySelector('#container-ajouter-fichier'));
-// if(document.querySelector('#ajouter-fichier').files != ""){
-//     document.querySelector("#container-ajouter-fichier").style.backgroundImage = "url(assets/images/abajour-tahina.png)"
-
-//     document.querySelector('#ajouter-fichier').style.display = "none";
-// }
-
+// -- AJOUTER UNE PHOTO -- 
 const inputTypeFileSelector = document.querySelector('#ajouter-fichier');
 var imageAjoutee = "";
 
+let isImageUploded = false;
+let isFormSubmited = false;
 
-  // -- Ajouter un projet  
 
-function ajouterProjet(){
-    document.querySelector('#modale-form').addEventListener('submit', (event)=>{
-        event.preventDefault();
-        console.log("super submit");
+// Fonction pour ajouter un projet qui est appelée quand une image est uploader 
+async function ajouterProjet() {
 
-        const ajouterTitre = event.target.querySelector("#ajouter-titre").value;
-        const selectCategorie =  event.target.querySelector("#select_categorie").value;
+    const ajouterTitre = document.querySelector("#ajouter-titre").value;
+    const selectCategorie = document.querySelector("#select_categorie").value;
 
-        if(ajouterTitre != "" && selectCategorie != ""){
-            console.log("titre et catégorie ok ")
+    if (isImageUploded == true && ajouterTitre != "" && selectCategorie != "") {
+        console.log("titre et catégorie ok ");
+        document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "none";
+
+        
+        const imageFile = inputTypeFileSelector.files[0];
+
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        formData.append('title', ajouterTitre);
+        formData.append('category', selectCategorie);
+
+        console.log(formData);
+
+        let token = localStorage.getItem("token");
+        console.log(token);
+
+        
+
+        const ajouterProjetAPI = await fetch('http://localhost:5678/api/works', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        })
+
+        if (ajouterProjetAPI.ok) {
+            // Créer fetch en POST / Pourquoi on ne mets pas await
+            const res = await reponse.json();
+            console.log("projet ajouté");
+            console.log(res);
+            console.log(reponse);
         }
-        else{
-            console.log("il manque quelque chose")
-        }
-    })
 
+    }
+    else if (isFormSubmited == true){
+        // Appeler la fonction pour afficher qu'il manque quelque chose
+        document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "block";
+    }
 };
 
+
+document.querySelector('#modale-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    isFormSubmited = true;
+    ajouterProjet();
+});
+
 // Afficher l'image dans l'input type file
-inputTypeFileSelector.addEventListener('change', function(){
+inputTypeFileSelector.addEventListener('change', function () {
     const reader = new FileReader();
-    reader.addEventListener("load", ()=> {
+    reader.addEventListener("load", () => {
         imageAjoutee = reader.result;
-        let containerAjoutImageSelector =
-        document.querySelector('#container-ajouter-fichier');
+        let containerAjoutImageSelector = document.querySelector('#container-ajouter-fichier');
 
         containerAjoutImageSelector.style.backgroundImage = `url(${imageAjoutee})`;
 
@@ -291,15 +314,15 @@ inputTypeFileSelector.addEventListener('change', function(){
         inputTypeFileSelector.style.color = "transparent";
 
         inputTypeFileSelector.style.backgroundColor = "transparent";
-        
+
         inputTypeFileSelector.style.backgroundImage = 'url()';
 
         document.querySelector('#container-ajouter-fichier label').style.display = "none";
 
         document.querySelector('#container-ajouter-fichier p').style.display = "none";
-        
-        ajouterProjet();
 
+        isImageUploded = true;
+        ajouterProjet();
     })
     reader.readAsDataURL(this.files[0]);
 })

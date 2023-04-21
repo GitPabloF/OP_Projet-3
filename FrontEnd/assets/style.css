@@ -256,6 +256,10 @@ li a:hover {
 	color: #FFFFFF;
 }
 
+.card-id{
+display: none;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -648,6 +652,12 @@ input[type="file"] {
 	background-origin: content-box;
 }
 
+#modale_ajout_projet #form_incomplet{
+	display: none;
+	position: absolute;
+	bottom: 138px;
+	color: rgb(227, 77, 77);
+}
 #modale_ajout_projet .modale-ligne{
 	position: relative;
 	bottom: 0;
