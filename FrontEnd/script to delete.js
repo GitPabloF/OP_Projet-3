@@ -28,9 +28,9 @@ function getData() {
                         document.querySelector('#modale-card-conteneur').innerHTML +=
                             `<div class="card" id="${donnees[i].id}">
                             <div class="card-img" id="${donnees[i].id}">
-                                <img src='${donnees[i].imageUrl}'>												
+                                <img src='${donnees[i].imageUrl}'>                                              
                                 <button aria-label="supprimer-projet" class= "card-bouton_supprimer" id="card${donnees[i].id}-bouton_supprimer"><i class="fa-solid fa-trash-can"></i></i>
-                                </button>			
+                                </button>           
                             </div>
                             <h4 class="card-editer">éditer</h4>
                         </div>`
@@ -134,7 +134,6 @@ if (localStorage.getItem("token") != null) {
     // ajouter un écouteur 
     logoutSelecteur.addEventListener("click", (event) => {
         event.preventDefault();
-        console.log("test logout ok");
         // au click -> clearlocalstorage + refraichir la page 
         window.localStorage.removeItem("token");
         document.location.reload();
@@ -239,13 +238,25 @@ document.querySelector('#modale-ajout_photo').addEventListener('click', ouvreMod
 // -- AJOUTER UNE PHOTO -- 
 const inputTypeFileSelector = document.querySelector('#ajouter-fichier');
 var imageAjoutee = "";
+// const imageAjoutee2 = "";
 
 let isImageUploded = false;
 let isFormSubmited = false;
 
+console.log(`step1 ${imageAjoutee}`);
+
+// This details the mapping between category name and id.
+let categories = {
+    "objets": 1,
+    "appartements": 2,
+    "hotels_restaurants": 3
+};
+
+
 
 // Fonction pour ajouter un projet qui est appelée quand une image est uploader 
-async function ajouterProjet() {
+async function ajouterProjet(event) {
+    event.preventDefault();
 
     const ajouterTitre = document.querySelector("#ajouter-titre").value;
     const selectCategorie = document.querySelector("#select_categorie").value;
@@ -254,31 +265,43 @@ async function ajouterProjet() {
         console.log("titre et catégorie ok ");
         document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "none";
 
-        
+        console.log(selectCategorie);
         const imageFile = inputTypeFileSelector.files[0];
+        
 
+        // A RAJOUTER DANS LE CODE !! 
+        // Vérifier si l'object categories a bien la propriété que l'on récupère du HTML
+        if(!categories.hasOwnProperty(selectCategorie)) {
+            console.error("Property does not exist in categories");
+            return;
+        }
+        // A RAJOUTER DANS LE CODE !! 
+        const categoryId = categories[selectCategorie];
+
+        (categoryId !== undefined && categoryId > 0)
         const formData = new FormData();
         formData.append('image', imageFile);
         formData.append('title', ajouterTitre);
-        formData.append('category', selectCategorie);
+        formData.append('category', categoryId); 
 
         console.log(formData);
 
         let token = localStorage.getItem("token");
         console.log(token);
 
+        console.log(`step2 ${imageAjoutee}`);
         
-
         const ajouterProjetAPI = await fetch('http://localhost:5678/api/works', {
             method: "POST",
             headers: {
-                'Content-Type': 'multipart/form-data',
+                // "Content-type": "application/json",
                 'Authorization': `Bearer ${token}`
             },
             body: formData
         })
-
+        event.preventDefault();
         if (ajouterProjetAPI.ok) {
+            event.preventDefault();
             // Créer fetch en POST / Pourquoi on ne mets pas await
             const res = await reponse.json();
             console.log("projet ajouté");
@@ -288,6 +311,7 @@ async function ajouterProjet() {
 
     }
     else if (isFormSubmited == true){
+        console.log('test')
         // Appeler la fonction pour afficher qu'il manque quelque chose
         document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "block";
     }
@@ -296,8 +320,9 @@ async function ajouterProjet() {
 
 document.querySelector('#modale-form').addEventListener('submit', (event) => {
     event.preventDefault();
+    console.log('Submit');
     isFormSubmited = true;
-    ajouterProjet();
+    ajouterProjet(event);
 });
 
 // Afficher l'image dans l'input type file
@@ -305,20 +330,14 @@ inputTypeFileSelector.addEventListener('change', function () {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
         imageAjoutee = reader.result;
+
         let containerAjoutImageSelector = document.querySelector('#container-ajouter-fichier');
-
         containerAjoutImageSelector.style.backgroundImage = `url(${imageAjoutee})`;
-
         containerAjoutImageSelector.style.backgroundColor = '#E8F1F6';
-
         inputTypeFileSelector.style.color = "transparent";
-
         inputTypeFileSelector.style.backgroundColor = "transparent";
-
         inputTypeFileSelector.style.backgroundImage = 'url()';
-
         document.querySelector('#container-ajouter-fichier label').style.display = "none";
-
         document.querySelector('#container-ajouter-fichier p').style.display = "none";
 
         isImageUploded = true;
@@ -326,4 +345,3 @@ inputTypeFileSelector.addEventListener('change', function () {
     })
     reader.readAsDataURL(this.files[0]);
 })
-
