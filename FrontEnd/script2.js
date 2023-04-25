@@ -1,5 +1,7 @@
 const token = localStorage.getItem("token");
 
+let portefolioGallery = document.querySelector('#portfolio .gallery');
+
 function getData() {
     //  -- RÉCUPÉRER LES TRAVAUX DU BACK-END --
     try {
@@ -11,10 +13,10 @@ function getData() {
             .then(donnees => {
                 function genererElements(donnees) {
                     // retire les projets de la page au lancement de la fonction
-                    document.querySelector('#portfolio .gallery').innerHTML = "";
+                    portefolioGallery.innerHTML = "";
                     // boucle for qui créé les éléments HTML et incorpore les éléments de l'API
                     for (let i = 0; i < donnees.length; i++) {
-                        document.querySelector('#portfolio .gallery').innerHTML +=
+                        portefolioGallery.innerHTML +=
                             `<figure id="card${donnees[i].id}"> 
                                 <p  class="card-id">${donnees[i].id}</p>
                                 <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> 
@@ -24,7 +26,8 @@ function getData() {
                     // -- METTRE PROJETS SUR MODALE --
                     // mettre l'image du premier élément du JSON pour la première card (avec l'icon déplacer)
                     document.querySelector('#card1-img img').src = `${donnees[0].imageUrl}`;
-
+                    
+                    document.querySelector('#modale-card-conteneur').innerHTML = "";
                     // mettre les autres images des autres projets dans la modale 
                     for (let i = 1; i < donnees.length; i++) {
                         document.querySelector('#modale-card-conteneur').innerHTML +=
@@ -74,7 +77,7 @@ function getData() {
                         return donnee.category.name == `${nomFiltre}`;
                     });
                     // Retirer tous les éléments du HTML + appeler la fonction avec les nouveaux élements filtres
-                    document.querySelector('#portfolio .gallery').innerHTML = "";
+                    portefolioGallery.innerHTML = "";
                     genererElements(elementsFiltrees);
                 }
 
@@ -242,9 +245,9 @@ document.querySelector('#modale-form').addEventListener('submit', async(event)=>
     event.preventDefault();
 
     // définition des const
-    const getFile = document.querySelector('#ajouter-fichier').files[0];
+    let getFile = document.querySelector('#ajouter-fichier').files[0];
 
-    const getTitle = document.querySelector('#ajouter-titre').value;
+    let getTitle = document.querySelector('#ajouter-titre').value;
 
     const categories = {
         "objets": 1,
@@ -252,10 +255,11 @@ document.querySelector('#modale-form').addEventListener('submit', async(event)=>
         "hotels_restaurants": 3
     };
     const getCategory = document.querySelector("#select_categorie").value;
-    const getCategoryID = categories[getCategory];
+    let getCategoryID = categories[getCategory];
 
     // condition si form bien complété
     if(isImageUploded == true && getTitle != "" && getCategory !=""){
+    
         const formData = new FormData();
         formData.append('image', getFile);
         formData.append('title', getTitle);
@@ -267,33 +271,79 @@ document.querySelector('#modale-form').addEventListener('submit', async(event)=>
             body: formData
         })
         if(addProjectAPI.ok){
-            // ajouter dynamiquement les projets 
-            // test 1
-            getData();
-            //test 2
-            function addNewProject(){
-                document.querySelector('#portfolio .gallery').innerHTML +=
-                `<figure> 
-                    <img src="${getFile}" alt="${getTitle}"> <figcaption> ${getTitle}</figcaption> 
-                </figure>`;
-            }
-            // fin ajouter dynamiquement les projets 
-            fermeModale();
-        
+            // -- ajoutet les projets dans le DOM - partie galerie
+            const createFigure = document.createElement("figure");
+            const createImage = document.createElement("img");
+            const createFigcaption = document.createElement("figcaption");
+            
+            createFigcaption.textContent = getTitle;
+            createImage.src = imageAjoutee;
+            console.log(imageAjoutee);
+            console.log(getFile);
+
+            portefolioGallery.appendChild(createFigure);
+            createFigure.appendChild(createImage);
+            createFigure.appendChild(createFigcaption);
+
+            //-- ajouter les projets dans le DOM - partie galerie
+           
+            const divModale = document.createElement('div');
+            divModale.setAttribute('class', 'card');
+            document.querySelector('#modale-card-conteneur').appendChild(divModale);
+
+            const divImgModale = document.createElement('div');
+            divImgModale.setAttribute('class', 'card-img');
+            divModale.appendChild(divImgModale);
+
+            const imgModale = document.createElement('img');
+            divImgModale.appendChild(imgModale);
+            imgModale.src = imageAjoutee;
+
+            const buttonModale = document.createElement('button');
+            buttonModale.setAttribute('class', 'card-bouton_supprimer');
+            divImgModale.appendChild(buttonModale);
+
+            const iModale = document.createElement('i');
+            iModale.setAttribute('class','fa-solid fa-trash-can');
+            buttonModale.appendChild(iModale);
+
+            const h4Modale = document.createElement('h4');
+            h4Modale.setAttribute('class', 'card-editer');
+            h4Modale.textContent = "éditer";
+            divModale.appendChild(h4Modale);
+
+
+            
+            // vide les valeurs renseignées dans le formulaire et l'affiche sa version de base 
+            document.querySelector('#ajouter-titre').value = "";
+            document.querySelector("#select_categorie").value = "";
+            
+            document.querySelector('#container-ajouter-fichier').style.backgroundImage = `url()`;
+            
+            inputFile.style.zIndex = '1';
+            document.querySelector("#label-ajouter-fichier").style.zIndex = '1';
+            document.querySelector("#container-ajouter-fichier p").style.zIndex = '1'
+
+            inputFile.style.color = "#E8F1F6";
+            inputFile.style.backgroundColor = "#E8F1F6";
+            inputFile.style.backgroundImage = 'url(../assets/icons/picture-svgrepo.png)';
+            
+            fermeModale();   
+
         }
         else{
-            console.error('anune erreur est survenue')
+            console.error('une erreur est survenue')
         }
     }
     else{
         document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "block";
     }
 })
-
+let imageAjoutee = "";
 document.querySelector('#ajouter-fichier').addEventListener('change', function () {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
-        let imageAjoutee = reader.result;
+        imageAjoutee = reader.result;
 
         let containerAjoutImageSelector = document.querySelector('#container-ajouter-fichier');
         containerAjoutImageSelector.style.backgroundImage = `url(${imageAjoutee})`;
@@ -302,9 +352,15 @@ document.querySelector('#ajouter-fichier').addEventListener('change', function (
         inputFile.style.color = "transparent";
         inputFile.style.backgroundColor = "transparent";
         inputFile.style.backgroundImage = 'url()';
-        document.querySelector('#container-ajouter-fichier label').style.display = "none";
-        document.querySelector('#container-ajouter-fichier p').style.display = "none";
+        // document.querySelector('#container-ajouter-fichier label').style.display = "none";
+        // document.querySelector('#container-ajouter-fichier p').style.display = "none";
 
+        // test 
+        // inputFile.style.zIndex = '-1';
+        document.querySelector("#label-ajouter-fichier").style.zIndex = '-1';
+        document.querySelector("#container-ajouter-fichier p").style.zIndex = '-1';
+
+        // fin test
         isImageUploded = true;
         changeSubmitColor();
     })
@@ -317,6 +373,7 @@ document.querySelector('#ajouter-fichier').addEventListener('change', function (
 function changeSubmitColor(){
     if(isImageUploded == true && isTitleFiled == true && isCategoryFiled == true){
         document.querySelector('#modale-form-submit').style.backgroundColor = "#1D6154";
+        document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "none";
     }
     else{
         document.querySelector('#modale-form-submit').style.backgroundColor = "#A7A7A7"
