@@ -337,7 +337,6 @@ footer nav ul {
 	height: 59px;
 	position: absolute;
 	display: none;
-	/* à passer en flex */
 	justify-content: center;
 	align-items: center;
 	margin-bottom: 30px;
@@ -350,6 +349,10 @@ footer nav ul {
 	padding: 0 23px;
 	font-weight: 400;
 	border: none;
+}
+
+#edition button i{
+	margin-right: 10px;
 }
 
 #div-img-modifer {
@@ -392,7 +395,6 @@ footer nav ul {
 #modale-conteneur {
 	position: fixed;
 	display: none;
-	/* à passer en display none */
 	justify-content: center;
 	align-items: center;
 	top: 0;
@@ -411,7 +413,6 @@ footer nav ul {
 	max-height: calc(100vh - 30px);
 	width: 570px;
 	height: 670px;
-	/*670 index / 610 page 1 */
 	padding: 30px;
 	z-index: 1;
 }
@@ -443,9 +444,7 @@ footer nav ul {
 
 #modale-card-conteneur {
 	margin-top: 45px;
-	/* height: 390px; */
 	width: 430px;
-	/* max-height: ; */
 	max-width: calc(100vw - 40px);
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -600,7 +599,6 @@ input[type="file"] {
 	height: 170px;
 	width: 100%;
 	border-radius: 3px;
-	/* position: relative; */
 	background-image: url(../assets/icons/picture-svgrepo.png);
 	background-position: center bottom 89px;
 	background-repeat: no-repeat;
@@ -612,17 +610,6 @@ input[type="file"] {
 	display: none;
 }
 
-/* ::-webkit-file-upload-button {
-	background-color: #CBD6DC;
-	border: none;
-	color: #306685;
-	border-radius: 50px;
-	position: absolute;
-	width: 173px;
-	height: 36px;
-	left: 123px;
-	top: 95px;
-} */
 
 #label-ajouter-titre {
 	margin-top: 30px;

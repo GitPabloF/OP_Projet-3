@@ -1,18 +1,22 @@
+const token = localStorage.getItem("token");
+
+let portefolioGallery = document.querySelector('#portfolio .gallery');
+
 function getData() {
     //  -- RÉCUPÉRER LES TRAVAUX DU BACK-END --
     try {
-        // récup les data de l'API
+        // récup les datas de l'API
         fetch('http://localhost:5678/API/works')
             .then(donnees => donnees.json())
 
-            // afficher les projets 
+            // afficher les projets dans le portefolio
             .then(donnees => {
                 function genererElements(donnees) {
                     // retire les projets de la page au lancement de la fonction
-                    document.querySelector('#portfolio .gallery').innerHTML = "";
+                    portefolioGallery.innerHTML = "";
                     // boucle for qui créé les éléments HTML et incorpore les éléments de l'API
                     for (let i = 0; i < donnees.length; i++) {
-                        document.querySelector('#portfolio .gallery').innerHTML +=
+                        portefolioGallery.innerHTML +=
                             `<figure id="card${donnees[i].id}"> 
                                 <p  class="card-id">${donnees[i].id}</p>
                                 <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> 
@@ -23,6 +27,7 @@ function getData() {
                     // mettre l'image du premier élément du JSON pour la première card (avec l'icon déplacer)
                     document.querySelector('#card1-img img').src = `${donnees[0].imageUrl}`;
 
+                    document.querySelector('#modale-card-conteneur').innerHTML = "";
                     // mettre les autres images des autres projets dans la modale 
                     for (let i = 1; i < donnees.length; i++) {
                         document.querySelector('#modale-card-conteneur').innerHTML +=
@@ -35,33 +40,7 @@ function getData() {
                             <h4 class="card-editer">éditer</h4>
                         </div>`
                     }
-
-                    // --- SUPPRIMER DYNAMIQUEMENT PROJETS -- 
-
-                    const deleteButtons = document.querySelectorAll('.card-bouton_supprimer');
-
-                    deleteButtons.forEach(button => {
-                        button.addEventListener('click', () => {
-                            const card = button.closest('.card');
-                            const cardId = card.id;
-                            card.remove();
-                            console.log(`La carte avec l'id ${cardId} a été supprimée.`);
-
-                            document.querySelector(`.gallery #card${cardId}`).remove();
-
-                            let token = localStorage.getItem("token");
-                            console.log(token);
-
-                            fetch(`http://localhost:5678/api/works/${cardId}`, {
-                                method: "delete",
-                                headers: {
-                                    "content-type": "application/json",
-                                    "Authorization": `Bearer ${token}`
-                                }
-                            })
-                                .then(res => console.log(res));
-                        });
-                    });
+                    deleteProject();
                 }
                 genererElements(donnees);
 
@@ -77,18 +56,16 @@ function getData() {
                     const elementsFiltrees = donnees.filter((donnee) => {
                         return donnee.category.name == `${nomFiltre}`;
                     });
-                    // Retirer tous les éléments du HTML + appeler la fonction avec les nouveaux élements filtres
-                    document.querySelector('#portfolio .gallery').innerHTML = "";
+                    // Retire tous les éléments du HTML + appeler la fonction avec les nouveaux élements filtres
+                    portefolioGallery.innerHTML = "";
                     genererElements(elementsFiltrees);
                 }
 
                 // Ajouter l'écouteur avec la fonction de filtrage avce l'élément souhaité
-
                 btnTous.addEventListener("click", () => genererElements(donnees));
                 btnObjet.addEventListener("click", () => filtrage("Objets"));
                 btnAppartements.addEventListener("click", () => filtrage("Appartements"));
                 btnHotelsRestaurants.addEventListener("click", () => filtrage("Hotels & restaurants"));
-
             })
     } catch (error) {
         console.error('Une erreur est survenue', error);
@@ -98,8 +75,8 @@ function getData() {
 getData();
 
 // -- AFFICHAGE MODE ÉDITION --
-// Condition si il y a un token dans le local storage
-if (localStorage.getItem("token") != null) {
+// Condition s'il y a un token dans le local storage
+if (token != null) {
 
     // affiche la bannière du mode édition 
     const editionSelecteur = document.querySelector("#edition");
@@ -177,8 +154,6 @@ const ouvreModale = function (e) {
 
 //  -- fonction pour fermer la modale --
 const fermeModale = function (e) {
-    // enlève le compotement par défaut du HTML  
-    e.preventDefault();
 
     // sélectionne le conteneur et le masque
     const modaleElement = document.querySelector('#modale-conteneur');
@@ -234,99 +209,142 @@ document.querySelector('#portfolio-modifier-a').addEventListener('click', ouvreM
 // Sélectionne la page 2 de la modale + appelle la fonction pour affiche la page 2 de la modale 
 document.querySelector('#modale-ajout_photo').addEventListener('click', ouvreModalePage2);
 
+// --- SUPPRIMER DYNAMIQUEMENT PROJETS -- 
+
+function deleteProject(){
+    const deleteButtons = document.querySelectorAll('.card-bouton_supprimer');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.card');
+            const cardId = card.id;
+            card.remove();
+            document.querySelector(`.gallery #card${cardId}`).remove();
+    
+            fetch(`http://localhost:5678/api/works/${cardId}`, {
+                method: "delete",
+                headers: {
+                    "content-type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+        });
+    });
+}
 
 // -- AJOUTER UNE PHOTO -- 
-const inputTypeFileSelector = document.querySelector('#ajouter-fichier');
-var imageAjoutee = "";
-// const imageAjoutee2 = "";
-
 let isImageUploded = false;
-let isFormSubmited = false;
+const inputFile = document.querySelector('#ajouter-fichier');
 
-console.log(`step1 ${imageAjoutee}`);
-
-// This details the mapping between category name and id.
-let categories = {
-    "objets": 1,
-    "appartements": 2,
-    "hotels_restaurants": 3
-};
-
-
-
-// Fonction pour ajouter un projet qui est appelée quand une image est uploader 
-async function ajouterProjet(event) {
+if (isImageUploded == true && getTitle != "" && getCategory != "") {
+}
+document.querySelector('#modale-form').addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const ajouterTitre = document.querySelector("#ajouter-titre").value;
-    const selectCategorie = document.querySelector("#select_categorie").value;
+    // définition des const
+    let getFile = document.querySelector('#ajouter-fichier').files[0];
+    let getTitle = document.querySelector('#ajouter-titre').value;
 
-    if (isImageUploded == true && ajouterTitre != "" && selectCategorie != "") {
-        console.log("titre et catégorie ok ");
-        document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "none";
+    const categories = {
+        "objets": 1,
+        "appartements": 2,
+        "hotels_restaurants": 3
+    };
+    const getCategory = document.querySelector("#select_categorie").value;
+    let getCategoryID = categories[getCategory];
 
-        console.log(selectCategorie);
-        const imageFile = inputTypeFileSelector.files[0];
-        
+    // condition si form bien complété
+    if (isImageUploded == true && getTitle != "" && getCategory != "") {
 
-        // A RAJOUTER DANS LE CODE !! 
-        // Vérifier si l'object categories a bien la propriété que l'on récupère du HTML
-        if(!categories.hasOwnProperty(selectCategorie)) {
-            console.error("Property does not exist in categories");
-            return;
-        }
-        // A RAJOUTER DANS LE CODE !! 
-        const categoryId = categories[selectCategorie];
-
-        (categoryId !== undefined && categoryId > 0)
+        // form data
         const formData = new FormData();
-        formData.append('image', imageFile);
-        formData.append('title', ajouterTitre);
-        formData.append('category', categoryId); 
+        formData.append('image', getFile);
+        formData.append('title', getTitle);
+        formData.append('category', getCategoryID);
 
-        console.log(formData);
-
-        let token = localStorage.getItem("token");
-        console.log(token);
-
-        console.log(`step2 ${imageAjoutee}`);
-        
-        const ajouterProjetAPI = await fetch('http://localhost:5678/api/works', {
+        // appel API en POST pour ajouter les projets 
+        const addProjectAPI = await fetch('http://localhost:5678/api/works', {
             method: "POST",
-            headers: {
-                // "Content-type": "application/json",
-                'Authorization': `Bearer ${token}`
-            },
+            headers: { 'Authorization': `Bearer ${token}` },
             body: formData
         })
-        event.preventDefault();
-        if (ajouterProjetAPI.ok) {
-            event.preventDefault();
-            // Créer fetch en POST / Pourquoi on ne mets pas await
-            const res = await reponse.json();
-            console.log("projet ajouté");
-            console.log(res);
-            console.log(reponse);
-        }
 
+        if (addProjectAPI.ok) {
+            const res = await addProjectAPI.json();
+
+            // -- ajoutet les projets dans le DOM - partie galerie
+            const createFigure = document.createElement("figure");
+            portefolioGallery.appendChild(createFigure);
+            createFigure.setAttribute('id', `card${res.id}`);
+
+            const createImage = document.createElement("img");
+            createImage.src = imageAjoutee;
+            createFigure.appendChild(createImage);
+
+            const createFigcaption = document.createElement("figcaption");
+            createFigcaption.textContent = getTitle;
+            createFigure.appendChild(createFigcaption);
+
+            //-- ajouter les projets dans le DOM - partie modale
+
+            const divModale = document.createElement('div');
+            divModale.classList.add('card');
+            divModale.setAttribute('id', res.id);
+            document.querySelector('#modale-card-conteneur').appendChild(divModale);
+
+            const divImgModale = document.createElement('div');
+            divImgModale.setAttribute('class', 'card-img');
+            divModale.appendChild(divImgModale);
+
+            const imgModale = document.createElement('img');
+            divImgModale.appendChild(imgModale);
+            imgModale.src = imageAjoutee;
+
+            const buttonModale = document.createElement('button');
+            buttonModale.setAttribute('class', 'card-bouton_supprimer');
+            divImgModale.appendChild(buttonModale);
+
+            const iModale = document.createElement('i');
+            iModale.setAttribute('class', 'fa-solid fa-trash-can');
+            buttonModale.appendChild(iModale);
+
+            const h4Modale = document.createElement('h4');
+            h4Modale.setAttribute('class', 'card-editer');
+            h4Modale.textContent = "éditer";
+            divModale.appendChild(h4Modale);
+
+            // appel la fonction pour supprimer des projets si besoin
+            deleteProject();
+
+            // vide les valeurs renseignées dans le formulaire et l'affiche sa version de base 
+            document.querySelector('#ajouter-titre').value = "";
+            document.querySelector("#select_categorie").value = "";
+
+            document.querySelector('#container-ajouter-fichier').style.backgroundImage = `url()`;
+
+            inputFile.style.zIndex = '1';
+            document.querySelector("#label-ajouter-fichier").style.zIndex = '1';
+            document.querySelector("#container-ajouter-fichier p").style.zIndex = '1'
+
+            inputFile.style.color = "#E8F1F6";
+            inputFile.style.backgroundColor = "#E8F1F6";
+            inputFile.style.backgroundImage = 'url(../assets/icons/picture-svgrepo.png)';
+
+            fermeModale();
+        }
+        else {
+            console.error('une erreur est survenue')
+        }
     }
-    else if (isFormSubmited == true){
-        console.log('test')
-        // Appeler la fonction pour afficher qu'il manque quelque chose
+    //si le form est incomplet 
+    else {
         document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "block";
     }
-};
+})
 
-
-document.querySelector('#modale-form').addEventListener('submit', (event) => {
-    event.preventDefault();
-    console.log('Submit');
-    isFormSubmited = true;
-    ajouterProjet(event);
-});
-
-// Afficher l'image dans l'input type file
-inputTypeFileSelector.addEventListener('change', function () {
+// afficher l'image ajoutée dans le form 
+let imageAjoutee = "";
+document.querySelector('#ajouter-fichier').addEventListener('change', function () {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
         imageAjoutee = reader.result;
@@ -334,14 +352,53 @@ inputTypeFileSelector.addEventListener('change', function () {
         let containerAjoutImageSelector = document.querySelector('#container-ajouter-fichier');
         containerAjoutImageSelector.style.backgroundImage = `url(${imageAjoutee})`;
         containerAjoutImageSelector.style.backgroundColor = '#E8F1F6';
-        inputTypeFileSelector.style.color = "transparent";
-        inputTypeFileSelector.style.backgroundColor = "transparent";
-        inputTypeFileSelector.style.backgroundImage = 'url()';
-        document.querySelector('#container-ajouter-fichier label').style.display = "none";
-        document.querySelector('#container-ajouter-fichier p').style.display = "none";
+
+        inputFile.style.color = "transparent";
+        inputFile.style.backgroundColor = "transparent";
+        inputFile.style.backgroundImage = 'url()';
+
+        document.querySelector("#label-ajouter-fichier").style.zIndex = '-1';
+        document.querySelector("#container-ajouter-fichier p").style.zIndex = '-1';
 
         isImageUploded = true;
-        ajouterProjet();
+        changeSubmitColor();
     })
     reader.readAsDataURL(this.files[0]);
+})
+
+
+// -- Change la couleur du btn valider quand tous les input sont remplis 
+
+function changeSubmitColor() {
+    if (isImageUploded == true && isTitleFiled == true && isCategoryFiled == true) {
+        document.querySelector('#modale-form-submit').style.backgroundColor = "#1D6154";
+        document.querySelector('#modale_ajout_projet #form_incomplet').style.display = "none";
+    }
+    else {
+        document.querySelector('#modale-form-submit').style.backgroundColor = "#A7A7A7"
+    }
+}
+
+let isTitleFiled = false;
+let isCategoryFiled = false;
+
+document.querySelector('#ajouter-titre').addEventListener('input', function () {
+    if (document.querySelector('#ajouter-titre').value != "") {
+        isTitleFiled = true;
+    }
+    else {
+        isTitleFiled = false;
+    }
+    changeSubmitColor();
+
+})
+
+document.querySelector('#select_categorie').addEventListener('input', function () {
+    if (document.querySelector('#select_categorie').value != "") {
+        isCategoryFiled = true;
+    }
+    else {
+        isCategoryFiled = false;
+    }
+    changeSubmitColor();
 })
