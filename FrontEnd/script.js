@@ -19,22 +19,22 @@ function getData() {
                         portefolioGallery.innerHTML +=
                             `<figure id="card${donnees[i].id}"> 
                                 <p  class="card-id">${donnees[i].id}</p>
-                                <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> <figcaption> ${donnees[i].title}</figcaption> 
+                                <img src="${donnees[i].imageUrl}" alt="${donnees[i].title}"> 
+                                <figcaption> ${donnees[i].title}</figcaption> 
                             </figure>`;
                     }
 
                     // -- METTRE PROJETS SUR MODALE --
-                    // mettre l'image du premier élément du JSON pour la première card (avec l'icon déplacer)
-                    document.querySelector('#card1-img img').src = `${donnees[0].imageUrl}`;
-
-                    document.querySelector('#modale-card-conteneur').innerHTML = "";
-                    // mettre les autres images des autres projets dans la modale 
-                    for (let i = 1; i < donnees.length; i++) {
+                    for (let i = 0; i < donnees.length; i++) {
                         document.querySelector('#modale-card-conteneur').innerHTML +=
                             `<div class="card" id="${donnees[i].id}">
                             <div class="card-img" id="${donnees[i].id}">
-                                <img src='${donnees[i].imageUrl}'>                                              
-                                <button aria-label="supprimer-projet" class= "card-bouton_supprimer" id="card${donnees[i].id}-bouton_supprimer"><i class="fa-solid fa-trash-can"></i></i>
+                                <img src='${donnees[i].imageUrl}'>   
+                                <button class="card-deplacer" aria-hidden="true" aria-label="déplacer-projet">
+                                    <i class="fa-solid fa-arrows-up-down-left-right"></i>
+								</button>                                           
+                                <button aria-label="supprimer-projet" class= "card-bouton_supprimer" id="card${donnees[i].id}-bouton_supprimer">
+                                    <i class="fa-solid fa-trash-can"></i>
                                 </button>           
                             </div>
                             <h4 class="card-editer">éditer</h4>
@@ -211,7 +211,7 @@ document.querySelector('#modale-ajout_photo').addEventListener('click', ouvreMod
 
 // --- SUPPRIMER DYNAMIQUEMENT PROJETS -- 
 
-function deleteProject(){
+function deleteProject() {
     const deleteButtons = document.querySelectorAll('.card-bouton_supprimer');
 
     deleteButtons.forEach(button => {
@@ -220,7 +220,7 @@ function deleteProject(){
             const cardId = card.id;
             card.remove();
             document.querySelector(`.gallery #card${cardId}`).remove();
-    
+
             fetch(`http://localhost:5678/api/works/${cardId}`, {
                 method: "delete",
                 headers: {

@@ -515,8 +515,13 @@ footer nav ul {
 	font-size: 9px;
 }
 
-#card-deplacer {
+.card .card-deplacer {
 	right: 24px;
+	display: none;
+}
+
+.card:hover .card-deplacer {
+	display: flex;
 }
 
 .card h4 {
