@@ -236,8 +236,6 @@ function deleteProject() {
 let isImageUploded = false;
 const inputFile = document.querySelector('#ajouter-fichier');
 
-if (isImageUploded == true && getTitle != "" && getCategory != "") {
-}
 document.querySelector('#modale-form').addEventListener('submit', async (event) => {
     event.preventDefault();
 

@@ -1,6 +1,4 @@
 // -- AUTHENTIFICATION DE L'UTILISATEUR 
-let utilisateurEstConnecte = false;
-
 async function logUser() {
     // séléction de la partie le btn submit + ajout de l'event listener 
     const btnEnvoyer = document.querySelector('form');
@@ -33,8 +31,6 @@ async function logUser() {
                 //Stoker le token 
                 window.localStorage.setItem("token",res.token);
 
-                utilisateurEstConnecte = true;
-
                 // Re dériger vers mode édition
                 window.open("../index.html");                
             } else{
@@ -50,7 +46,6 @@ async function logUser() {
                 inputSelector.style.border = "solid 0.5px #d65757";
                 inputSelector2.style.border = "solid 0.5px #d65757";
 
-                utilisateurEstConnecte = false;
             } 
 
 
