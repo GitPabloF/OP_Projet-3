@@ -1,19 +1,15 @@
 // -- AUTHENTIFICATION DE L'UTILISATEUR 
 async function logUser() {
-    // séléction de la partie le btn submit + ajout de l'event listener 
     const btnEnvoyer = document.querySelector('form');
 
     btnEnvoyer.addEventListener("submit", async (event) => {
-        // ajouter le preventDefault();
         event.preventDefault();
 
-        // créer la charge utile 
         const connexion = {
             email: event.target.querySelector("[name=e-mail]").value,
             password: event.target.querySelector("[name=mot-de-passe]").value
         };
 
-        // met la charge utilie au format JSON string
         let chargeUtile = JSON.stringify(connexion);
 
         try {
@@ -25,13 +21,10 @@ async function logUser() {
             })
 
             if (reponse.ok) {
-                // Créer fetch en POST 
                 const res = await reponse.json();
             
-                //Stoker le token 
                 window.localStorage.setItem("token",res.token);
 
-                // Re dériger vers mode édition
                 window.open("../index.html");                
             } else{
                 // message erreur 
