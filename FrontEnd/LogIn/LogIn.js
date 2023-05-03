@@ -1,7 +1,7 @@
 // -- AUTHENTIFICATION DE L'UTILISATEUR 
 async function logUser() {
     const btnEnvoyer = document.querySelector('form');
-
+    
     btnEnvoyer.addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -22,34 +22,26 @@ async function logUser() {
 
             if (reponse.ok) {
                 const res = await reponse.json();
-            
                 window.localStorage.setItem("token",res.token);
-
                 window.open("../index.html");                
             } else{
-                // message erreur 
+                // message d'erreur si les valeurs sont erronées 
                 const err_serveurSelector = document.querySelector("#Erreur_Serveur");
                 err_serveurSelector.style.display = "none";
-
                 const logInSelector = document.querySelector("#LogIn_invalide");
                 logInSelector.style.display = "block";
-
                 const inputSelector = document.querySelector("#e-mail");
                 const inputSelector2 = document.querySelector("#mot-de-passe");
                 inputSelector.style.border = "solid 0.5px #d65757";
                 inputSelector2.style.border = "solid 0.5px #d65757";
-
             } 
-
 
         } catch (error) {
             console.log("une erreur est survenu"); 
             const logInSelector = document.querySelector("#LogIn_invalide");
             logInSelector.style.display = "none";
         }
-
     });
-
 }
 
 logUser();

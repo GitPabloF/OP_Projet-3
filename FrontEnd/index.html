@@ -86,18 +86,18 @@
 						<h3 id="modale-titre">Ajout photo</h3>
 						<form id="modale-form">
 							<div id="container-ajouter-fichier">
-								<input type="file" accept=".jpg, .png" max-size="4000000" name="ajouter-fichier" id="ajouter-fichier">
+								<input type="file" accept=".jpg, .png" max-size="4000000" name="image" id="ajouter-fichier">
 								<label for="ajouter-fichier" id="label-ajouter-fichier">+ Ajouter photo</label>
 								<p>jpg,png : 4mo max</p>
 							</div>
 							<label for="label-ajouter-titre" id="label-ajouter-titre">Titre</label>
-							<input type="text" name="ajouter-titre" id="ajouter-titre" class="modale-form-input">
+							<input type="text" name="title" id="ajouter-titre" class="modale-form-input">
 							<label for="select_categorie" id="label-select_categorie">Catégorie</label>
-							<select id="select_categorie" name=«select_categorie» class="modale-form-input">
+							<select id="select_categorie" name="category" class="modale-form-input">
 								<option disabled selected></option>
-								<option value="objets">Objets</option>
-								<option value="appartements">Appartements</option>
-								<option value="hotels_restaurants">Hôtels & restaurants</option>
+								<option value="1">Objets</option>
+								<option value="2">Appartements</option>
+								<option value="3">Hôtels & restaurants</option>
 							</select>
 							<p id="form_incomplet">Veuillez remplir tous les champs nécessaires.</p>
 							<div class="modale-ligne"></div>
@@ -109,13 +109,13 @@
 			</div>
 			<!-- Ajout des btn de filtrage -->
 			<div id="filtres">
-				<button id="tous">Tous</button>
+				<button class="category-button selected" id="tous">Tous</button>
 
-				<button id="objets">Objets</button>
+				<button class="category-button" id="Objets">Objets</button>
 
-				<button id="appartements">Appartements</button>
+				<button class="category-button" id="appartements">Appartements</button>
 
-				<button id="hotels_restaurants">Hôtels & restaurants</button>
+				<button class="category-button" id="hotels_restaurants">Hotels & restaurants</button>
 
 			</div>
 			<!-- Fin ajout filtre  -->
